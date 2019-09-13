@@ -34,6 +34,34 @@ This will override the default dataset of the model to set the default order.  I
 Foo.with_original_dataset
 ```
 
+Associations will also respect the default order outlined in the model.  For example:
+
+```ruby
+class Foo < Sequel::Model
+  one_to_many :bars
+end
+
+class Bar < Sequel::Model
+  default_order Sequel.desc(:name)
+end
+```
+
+With this pattern I can do this:
+
+```ruby
+Foo.first.bars_dataset
+
+=> SELECT * FROM bars WHERE (id = 1) ORDER BY name
+```
+
+But if you want to override that and get the unordered dataset you can do the following:
+
+```ruby
+Foo.first.bars_dataset.from_original_dataset
+
+=> SELECT * FROM bars WHERE (id = 1)
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/ehowe/sequel-default-order.
