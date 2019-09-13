@@ -12,7 +12,21 @@ DB.create_table(:foos) do
   column :name, :text
 end
 
+DB.create_table(:bars) do
+  primary_key :id
+
+  foreign_key :foo_id, :foos
+
+  column :name, :text
+end
+
 class Foo < Sequel::Model
+  plugin :default_order
+
+  one_to_many :bars
+end
+
+class Bar < Sequel::Model
   plugin :default_order
 end
 
